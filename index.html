@@ -1,251 +1,173 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار نافس التجريبي 2026 - مدرسة سعيد بن المسيب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>تدريبات اختبار نافس - التدريب 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #5d8aa8; 
-            --secondary-color: #f0f4f8;
-            --success-color: #8fbc8f; 
-            --error-color: #e9967a; 
-            --text-color: #333;
+        :root { --primary-color: #5d8aa8; --header-bg: #1a3c5a; --secondary-color: #fdfbf7; }
+        body { 
+            font-family: 'Vazirmatn', sans-serif; 
+            background-color: var(--secondary-color); 
+            margin: 0; padding: 10px; 
+            display: flex; flex-direction: column; align-items: center; 
         }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
+        
         .header {
-            text-align: center;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 20px;
+            text-align: center; background: var(--header-bg); color: white;
+            padding: 15px 10px; border-radius: 12px; width: 100%; max-width: 600px;
+            margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin: 0; font-size: 19px; }
+        .header h2 { margin: 5px 0 8px 0; font-size: 15px; font-weight: normal; color: #ced4da; }
+        
+        .school-title { font-size: 13px; margin-bottom: 5px; opacity: 0.9; }
+
+        .test-note { 
+            font-size: 15px; /* تكبير الخط */
+            background: rgba(255,255,255,0.1); padding: 10px; 
+            border-radius: 5px; margin-top: 10px; color: #ffeb3b; 
+            font-weight: bold; border: 1px dashed rgba(255,235,59,0.3); line-height: 1.4;
         }
 
-        .header h1 { color: var(--primary-color); margin: 0; font-size: 22px; }
-        .header p { margin: 5px 0; font-size: 16px; color: #666; }
-
-        .quiz-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 800px;
-            text-align: center;
+        .staff-info {
+            display: flex; justify-content: center; gap: 6px;
+            font-size: 10px; border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 8px; white-space: nowrap;
         }
 
-        .progress-bar {
-            height: 10px;
-            background: #eee;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            overflow: hidden;
+        .quiz-container { 
+            background: white; padding: 25px; border-radius: 15px; 
+            width: 100%; max-width: 600px; text-align: center; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
         }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary-color);
-            width: 0%;
-            transition: width 0.3s ease;
+        .progress-bar { height: 6px; background: #eee; border-radius: 3px; margin-bottom: 15px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary-color); width: 0%; transition: 0.3s; }
+        .question-text { font-size: 20px; font-weight: bold; margin-bottom: 25px; color: #34495e; line-height: 1.6; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .option-btn { 
+            padding: 15px; font-size: 17px; border: 2px solid #ecf0f1; 
+            border-radius: 10px; background: white; cursor: pointer; 
+            font-family: 'Vazirmatn', sans-serif; transition: 0.2s; 
         }
-
-        .question-text {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .option-btn {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .option-btn:hover { border-color: var(--primary-color); background: #f9f9f9; }
-        .correct { background-color: var(--success-color) !important; color: white; border-color: var(--success-color); }
-        .wrong { background-color: var(--error-color) !important; color: white; border-color: var(--error-color); }
-
-        .nav-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            display: none;
-            box-shadow: 0 4px 10px rgba(93, 138, 168, 0.3);
-        }
-
-        #results { display: none; text-align: right; }
-        .result-card { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 15px; border-right: 5px solid var(--primary-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
-        @media (max-width: 600px) {
-            .options-grid { grid-template-columns: 1fr; }
-        }
-
-        @media print {
-            .nav-btn, .header p:last-child { display: none !important; }
-            body { background: white; }
-        }
+        .option-btn:active { background: #f8f9fa; transform: scale(0.98); }
+        
+        #results { display: none; }
+        .score-display { font-size: 48px; font-weight: bold; color: var(--primary-color); margin: 10px 0; }
+        .retry-btn { background-color: #5d8aa8; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; font-family: 'Vazirmatn'; margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
+        
+        .loading { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary-color); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        @media (max-width: 450px) { .options-grid { grid-template-columns: 1fr; } .header h1 { font-size: 17px; } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>الاختبارات الوطنية "نافس" 2026 - تدريبات الصف الثالث الابتدائي</h1>
-    <p>مدرسة سعيد بن المسيب الابتدائية بأبها</p>
-    <p>معلم المادة: أ. عمرو العمري | مدير المدرسة: عبدالرحمن النقاز</p>
+    <h1>تدريبات اختبار نافس</h1>
+    <h2>مجال الأعداد والعمليات - <span style="color: #ffcc00;">التدريب 2</span></h2>
+    <div class="school-title">مدرسة سعيد بن المسيب الابتدائية بأبها</div>
+    <div class="staff-info">
+        <span>معلم المادة / أ. عمرو العمري</span>
+        <span>|</span>
+        <span>مدير المدرسة / أ. عبدالرحمن النقاز</span>
+    </div>
+    <div class="test-note">عزيزي الطالب: هذا اختبار تدريبي للتدريب، ولا يترتب عليه نجاح أو رسوب.</div>
 </div>
 
 <div class="quiz-container" id="quiz-box">
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-    <div id="q-counter" style="margin-bottom: 10px; font-size: 14px; color: #777;">السؤال 1 من 45</div>
+    <div id="q-counter" style="font-size:11px; color:#999; margin-bottom:10px;">السؤال 1 من 15</div>
     <div class="question-text" id="question-text">جاري التحميل...</div>
     <div class="options-grid" id="options-grid"></div>
-    <button class="nav-btn" id="next-btn" onclick="nextQuestion()">السؤال التالي ←</button>
 </div>
 
 <div class="quiz-container" id="results">
-    <h2 style="text-align: center; color: var(--primary-color);">انتهى الاختبار يا بطل!</h2>
-    <h3 style="text-align: center;">درجتك هي: <span id="final-score" style="font-size: 32px;">0</span> من 45</h3>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button class="nav-btn" style="display:inline-block; margin: 5px;" onclick="window.print()">طباعة النتيجة 🖨️</button>
-        <button class="nav-btn" style="display:inline-block; margin: 5px; background: #999;" onclick="location.reload()">إعادة الاختبار</button>
+    <h2 style="color:var(--primary-color); font-size: 20px;">أحسنت يا بطل! لقد انتهيت من التدريب 2.</h2>
+    <p style="font-size: 14px; margin-bottom: 5px;">درجتك هي:</p>
+    <div class="score-display" id="final-score">0</div>
+    <p style="font-size: 13px; color: #666;">استعد للتحدي القادم بكل حماس!</p>
+    
+    <div id="retry-section" style="display:none;">
+        <button class="retry-btn" onclick="location.reload()"><span>إعادة المحاولة</span> 🔄</button>
+        <p style="font-size: 11px; color: #999; margin-top: 8px;">(لديك محاولة واحدة إضافية متبقية)</p>
     </div>
-    <hr>
-    <h3>مراجعة الإجابات:</h3>
-    <div id="review-area"></div>
+    <div id="status-area" style="margin-top:15px;"><div class="loading"></div></div>
 </div>
 
 <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw6CKxpc877UM7wQmDIVLlOR_aNiHDE19z-RP0PBPMPCszB72Ilb6_ArWMhrbP_mU3i/exec';
+
     const quizData = [
-        { q: "ما القيمة المنزلية للرقم (5) في العدد 2534؟", a: ["5", "50", "500", "5000"], c: 2 },
-        { q: "الصيغة القياسية للعدد 'ثلاثة آلاف وخمس مئة وأربعة' هي:", a: ["3540", "3054", "3504", "5340"], c: 2 },
-        { q: "أي الأعداد التالية يكمل النمط القفزي: 2400، 2600، 2800، ... ؟", a: ["2900", "3000", "2850", "3200"], c: 1 },
-        { q: "الترتيب الصحيح للأعداد (1250، 1520، 1052) من الأصغر إلى الأكبر هو:", a: ["1520، 1250، 1052", "1052، 1520، 1250", "1250، 1052، 1520", "1052، 1250، 1520"], c: 3 },
-        { q: "أكل محمد 3 قطع من فطيرة مقسمة إلى 8 قطع متساوية. ما الكسر الذي يمثل ما أكله؟", a: ["3/8", "5/8", "8/3", "3/5"], c: 0 },
-        { q: "كيف يكتب الكسر 'خمسة أسباع'؟", a: ["7/5", "5/7", "1/7", "5/5"], c: 1 },
-        { q: "أي الجمل التالية صحيحة؟", a: ["1/2 > 1/4", "1/4 > 1/2", "1/3 = 1/5", "1/8 > 1/3"], c: 0 },
-        { q: "ما الكسر المكافئ للكسر 1/2؟", a: ["1/3", "2/4", "2/3", "3/5"], c: 1 },
-        { q: "ناتج عملية الجمع: 345 + 213 = ...", a: ["558", "568", "557", "658"], c: 0 },
-        { q: "تقدير ناتج 49 + 32 بالتقريب إلى أقرب عشرة هو:", a: ["70", "80", "90", "100"], c: 1 },
-        { q: "مع أحمد 500 ريال، اشترى لعبة بمبلغ 200 ريال. كم ريالاً تبقى معه؟", a: ["200 ريال", "300 ريال", "700 ريال", "500 ريال"], c: 1 },
-        { q: "الجملة التي تمثل الجمع المتكرر (4 + 4 + 4) هي:", a: ["4 × 4", "3 × 4", "4 + 3", "12 × 1"], c: 1 },
-        { q: "وزعت أم 12 قطعة حلوى بالتساوي على 3 أطفال. كم نصيب كل طفل؟", a: ["3 قطع", "4 قطع", "6 قطع", "9 قطع"], c: 1 },
-        { q: "ناتج 7 × 8 = ...", a: ["54", "56", "48", "64"], c: 1 },
-        { q: "اشترى خالد 5 أقلام بسعر 4 ريالات للقلم الواحد. كم دفع للبائع؟", a: ["9 ريالات", "20 ريالاً", "1 ريال", "25 ريالاً"], c: 1 },
-        { q: "ما الشكل التالي في النمط: (دائرة، مربع، دائرة، مربع، ...)؟", a: ["مثلث", "دائرة", "مستطيل", "نجمة"], c: 1 },
-        { q: "ما العدد المفقود في النمط: 5، 10، 15، ...، 25؟", a: ["16", "20", "30", "35"], c: 1 },
-        { q: "إذا بدأنا بمثلث واحد، ثم أضفنا مثلثاً في كل مرة. كم عدد المثلثات في الشكل الرابع؟", a: ["3", "4", "5", "6"], c: 1 },
-        { q: "أي العمليات التالية ناتجها يساوي صفر؟", a: ["5 + 0", "5 × 0", "5 × 1", "5 - 0"], c: 1 },
-        { q: "الجملة العددية التي تحقق خاصية الإبدال هي:", a: ["4 + 5 = 5 + 4", "4 + 5 = 9", "4 × 1 = 4", "(2+3)+1 = 2+(3+1)"], c: 0 },
-        { q: "أوجد ناتج (2 × 3) × 2 باستخدام الخاصية التجميعية:", a: ["6", "10", "12", "8"], c: 2 },
-        { q: "العبارة 3 × (4 + 2) تساوي:", a: ["(3×4) + 2", "(3×4) + (3×2)", "3 + 4 + 2", "12 + 2"], c: 1 },
-        { q: "الحقيقة المرتبطة بالجملة 5 + 3 = 8 هي:", a: ["8 × 1 = 8", "8 - 3 = 5", "3 + 5 = 8", "5 - 3 = 2"], c: 1 },
-        { q: "يمكن إيجاد ناتج 3 × 5 عن طريق الجمع كالتالي:", a: ["3 + 5", "5 + 5 + 5", "3 + 3 + 3", "5 × 5"], c: 1 },
-        { q: "12 ÷ 4 تعني طرح الرقم 4 من 12 بشكل متكرر:", a: ["مرة واحدة", "مرتين", "3 مرات", "4 مرات"], c: 2 },
-        { q: "الجملة المرتبطة بعملية القسمة 20 ÷ 5 = 4 هي:", a: ["4 + 5 = 9", "5 × 4 = 20", "20 - 5 = 15", "20 × 1 = 20"], c: 1 },
-        { q: "عدد إذا أضفت إليه 5 أصبح الناتج 15. الجملة العددية هي:", a: ["س - 5 = 15", "س + 5 = 15", "15 + 5 = س", "5 × س = 15"], c: 1 },
-        { q: "الشكل الذي له 4 أضلاع متطابقة و4 زوايا قائمة هو:", a: ["المستطيل", "المربع", "المعين", "شبه المنحرف"], c: 1 },
-        { q: "كم عدد محاور التماثل للمستطيل؟", a: ["1", "2", "3", "4"], c: 1 },
-        { q: "المجسم الذي له 6 أوجه مربعة هو:", a: ["الأسطوانة", "المكعب", "الكرة", "المخروط"], c: 1 },
-        { q: "مربع طول ضلعه 3 سم، ما محيطه؟", a: ["6 سم", "9 سم", "12 سم", "15 سم"], c: 2 },
-        { q: "عدد الوحدات المربعة التي تغطي شكلاً يسمى:", a: ["المحيط", "المساحة", "الحجم", "الطول"], c: 1 },
-        { q: "مستطيل طوله 4 وحدات وعرضه وحدتان. ما مساحته؟", a: ["6 وحدات مربعة", "8 وحدات مربعة", "12 وحدة مربعة", "16 وحدة مربعة"], c: 1 },
-        { q: "الوحدة الأنسب لقياس المسافة بين مدينتين هي:", a: ["المتر", "السنتيمتر", "الكيلومتر", "المليمتر"], c: 2 },
-        { q: "أي الأشياء التالية كتلته تقاس بالكيلوجرام؟", a: ["ريشة", "قلم رصاص", "كيس أرز كبير", "مشبك ورق"], c: 2 },
-        { q: "سعة قارورة الماء الصغيرة تقاس بـ:", a: ["اللتر", "الملتر", "الكيلوجرام", "المتر"], c: 1 },
-        { q: "3 ورقات من فئة 10 ريالات وورقة من فئة 5 ريالات تساوي:", a: ["15 ريالاً", "30 ريالاً", "35 ريالاً", "40 ريالاً"], c: 2 },
-        { q: "أي المجموعات التالية تمثل 100 ريال؟", a: ["ورقتان من فئة 50 ريالاً", "3 ورقات من فئة 10 ريالات", "5 ورقات من فئة 5 ريالات", "ورقة واحدة من فئة 50 ريالاً"], c: 0 },
-        { q: "سعر القميص 50 ريالاً وسعر الحذاء 100 ريال. ما مجموع ما يدفعه المشتري؟", a: ["100 ريال", "120 ريالاً", "150 ريالاً", "200 ريال"], c: 2 },
-        { q: "الوحدة المناسبة لقياس زمن 'رمشة العين' هي:", a: ["الساعة", "الدقيقة", "الثانية", "اليوم"], c: 2 },
-        { q: "تشير الساعة إلى 3:30، كيف تقرأ؟", a: ["الثالثة تماماً", "الثالثة والربع", "الثالثة والنصف", "الرابعة والنصف"], c: 2 },
-        { q: "بدأت المباراة الساعة 7:00 مساءً وانتهت الساعة 8:30 مساءً. كم استمرت المباراة؟", a: ["ساعة واحدة", "ساعة ونصف", "ساعتان", "30 دقيقة"], c: 1 },
-        { q: "الجدول الذي يستخدم الإشارات (||||) لعد البيانات يسمى:", a: ["جدول الضرب", "الجدول التكراري", "التمثيل بالأعمدة", "التمثيل بالصور"], c: 1 },
-        { q: "في التمثيل بالرموز، إذا كان الرمز (نجمة) يمثل طالبين. فكم طالباً تمثلهم 3 نجمات؟", a: ["3", "5", "6", "9"], c: 2 },
-        { q: "إذا كان عمود 'يوم الأحد' أطول من عمود 'يوم الاثنين'، فهذا يعني أن:", a: ["قيمة الأحد أكبر", "قيمة الاثنين أكبر", "القيمتان متساويتان", "لا يمكن المقارنة"], c: 0 }
+        { q: "في العدد 6924، الرقم الذي يقع في منزلة 'المئات' هو:", a: ["4", "2", "9", "6"], c: 2 },
+        { q: "الصورة التحليلية (9 + 50 + 4000) تمثل العدد:", a: ["4509", "4059", "4590", "9540"], c: 1 },
+        { q: "أي الأعداد التالية هو عدد 'زوجي'؟", a: ["2431", "5683", "1208", "3337"], c: 2 },
+        { q: "قارن بين العددين: 8540 (...) 8504", a: ">", b: "<", c: "=", d: "+", a_list: [">", "<", "=", "+"], correct: 0 },
+        { q: "فطيرة مقسمة إلى 6 أجزاء متطابقة، أكلت هند 5 أجزاء منها. الكسر الدال على الأجزاء هو:", a: ["1/6", "5/6", "6/5", "1/5"], c: 1 },
+        { q: "الكسر الذي يقرأ 'ثلاثة أرباع' يكتب:", a: ["4/3", "3/4", "1/3", "1/4"], c: 1 },
+        { q: "أي الكسور التالية أصغر من 1/2؟", a: ["3/4", "2/3", "1/4", "5/5"], c: 2 },
+        { q: "الكسر المكافئ للكسر 2/3 هو:", a: ["4/6", "1/2", "3/2", "1/3"], c: 0 },
+        { q: "ناتج طرح: 700 - 250 = ...", a: ["550", "450", "500", "350"], c: 1 },
+        { q: "قدر ناتج طرح 89 - 41 بالتقريب إلى أقرب عشرة:", a: ["30", "40", "50", "60"], c: 2 },
+        { q: "مكتبة فيها 350 كتاباً، استعار الطلاب 100 كتاب. كم كتاباً بقي؟", a: ["450", "250", "200", "300"], c: 1 },
+        { q: "في غرفة الصف 3 صفوف، في كل صف 6 مقاعد. العملية المناسبة لحسابها هي:", a: ["3 + 6", "6 - 3", "3 × 6", "6 ÷ 3"], c: 2 },
+        { q: "يريد معلم توزيع 20 قلماً بالتساوي على 5 طلاب. كم سيأخذ كل طالب؟", a: ["4", "5", "10", "25"], c: 0 },
+        { q: "ناتج قسمة 36 ÷ 6 = ...", a: ["5", "6", "7", "8"], c: 1 },
+        { q: "توفر نورة 5 ريالات يومياً. كم ريالاً توفر في 4 أيام؟", a: ["9", "15", "20", "25"], c: 2 }
     ];
 
-    let currentIdx = 0;
-    let score = 0;
-    let userAnswers = [];
+    let currentIdx = 0, score = 0, qStats = [];
+    let attempts = parseInt(localStorage.getItem('nafis_t2_attempts')) || 0;
+
+    if(attempts >= 2) {
+        document.body.innerHTML = "<div class='quiz-container' style='margin-top:50px;'><h3>بطل نافس!</h3><p>لقد استنفدت جميع المحاولات المتاحة لهذا التدريب (2).</p></div>";
+    }
 
     function loadQuestion() {
         const q = quizData[currentIdx];
-        document.getElementById("q-counter").innerText = `السؤال ${currentIdx + 1} من 45`;
-        document.getElementById("progress-fill").style.width = `${((currentIdx + 1) / 45) * 100}%`;
+        document.getElementById("q-counter").innerText = `السؤال ${currentIdx + 1} من 15`;
+        document.getElementById("progress-fill").style.width = `${((currentIdx + 1) / 15) * 100}%`;
         document.getElementById("question-text").innerText = q.q;
-        
         const grid = document.getElementById("options-grid");
         grid.innerHTML = "";
-        document.getElementById("next-btn").style.display = "none";
+        
+        const options = q.a_list || q.a;
+        const correct = q.correct !== undefined ? q.correct : q.c;
 
-        q.a.forEach((option, i) => {
+        options.forEach((opt, i) => {
             const btn = document.createElement("button");
             btn.className = "option-btn";
-            btn.innerText = option;
-            btn.onclick = () => selectOption(i, btn);
+            btn.innerText = opt;
+            btn.onclick = () => {
+                let isCorrect = (i === correct) ? 1 : 0;
+                if(isCorrect) score++;
+                qStats.push(isCorrect);
+                currentIdx++;
+                if(currentIdx < quizData.length) loadQuestion();
+                else submitData();
+            };
             grid.appendChild(btn);
         });
     }
 
-    function selectOption(idx, btn) {
-        const correctIdx = quizData[currentIdx].c;
-        const allBtns = document.querySelectorAll(".option-btn");
-        allBtns.forEach(b => b.disabled = true);
-        if (idx === correctIdx) { btn.classList.add("correct"); score++; }
-        else { btn.classList.add("wrong"); allBtns[correctIdx].classList.add("correct"); }
-        userAnswers.push({ q: quizData[currentIdx].q, user: idx, correct: correctIdx });
-        document.getElementById("next-btn").style.display = "inline-block";
-    }
-
-    function nextQuestion() {
-        currentIdx++;
-        if (currentIdx < quizData.length) { loadQuestion(); }
-        else { showResults(); }
-    }
-
-    function showResults() {
-        document.getElementById("quiz-box").style.display = "none";
-        document.getElementById("results").style.display = "block";
-        document.getElementById("final-score").innerText = score;
-        const area = document.getElementById("review-area");
-        userAnswers.forEach((ans, i) => {
-            const card = document.createElement("div");
-            card.className = "result-card";
-            const isCorrect = ans.user === ans.correct;
-            card.innerHTML = `<strong>س${i+1}: ${ans.q}</strong><br><span style="color: ${isCorrect ? 'green' : 'red'}">إجابتك: ${quizData[i].a[ans.user]}</span><br>${!isCorrect ? `<span style="color: green">الإجابة الصحيحة: ${quizData[i].a[ans.correct]}</span>` : ''}`;
-            area.appendChild(card);
+    function submitData() {
+        document.getElementById('quiz-box').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('final-score').innerText = score + " / 15";
+        attempts++;
+        localStorage.setItem('nafis_t2_attempts', attempts);
+        if (attempts < 2) { document.getElementById('retry-section').style.display = 'block'; }
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ score: score, qStats: qStats, attempt: attempts })
+        }).then(() => {
+            document.getElementById('status-area').innerHTML = "<p style='color:green; font-weight:bold; font-size:11px;'>✓ تم تحديث السجل بنجاح</p>";
+        }).catch(() => {
+            document.getElementById('status-area').innerHTML = "";
         });
     }
     loadQuestion();
