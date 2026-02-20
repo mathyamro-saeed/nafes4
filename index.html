@@ -9,7 +9,7 @@
         :root { 
             --primary-color: #2e7d32; 
             --header-bg: #0d47a1; 
-            --bg-color: #e0f2f1; /* خلفية مينت متباينة ومنعشة */
+            --bg-color: #b2dfdb; /* خلفية متباينة أكثر (Mint غامق قليلاً) */
             --accent-gold: #ffb300; 
         }
         body { font-family: 'Vazirmatn', sans-serif; background-color: var(--bg-color); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
@@ -39,21 +39,39 @@
         .quiz-container { 
             background: white; padding: 30px; border-radius: 18px; 
             width: 100%; max-width: 600px; text-align: center; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
         }
         .progress-bar { height: 8px; background: #eceff1; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary-color); width: 0%; transition: 0.4s; }
         .question-text { font-size: 21px; font-weight: bold; margin-bottom: 30px; color: #263238; line-height: 1.7; }
         
+        /* تنسيق الكسور الرأسية */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 1.2em;
+            margin: 0 4px;
+        }
+        .numerator {
+            border-bottom: 2px solid #37474f;
+            padding: 0 4px;
+        }
+        .denominator {
+            padding: 0 4px;
+        }
+
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .option-btn { 
-            padding: 18px; font-size: 18px; border: 2px solid #f1f3f4; 
+            padding: 15px; font-size: 19px; border: 2px solid #f1f3f4; 
             border-radius: 12px; background: #fafafa; cursor: pointer; 
             font-family: 'Vazirmatn', sans-serif; transition: 0.2s ease;
             color: #37474f;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 80px;
         }
         .option-btn:hover { border-color: var(--primary-color); background: #f1f8e9; }
-        .option-btn:active { transform: scale(0.96); }
         
         #results { display: none; }
         .score-display { font-size: 52px; font-weight: bold; color: var(--header-bg); margin: 15px 0; }
@@ -62,13 +80,12 @@
             padding: 12px 25px; border-radius: 10px; font-size: 18px;
             cursor: pointer; font-family: 'Vazirmatn'; margin-top: 20px;
             display: inline-flex; align-items: center; gap: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
         }
         
         .loading { border: 4px solid #f3f3f3; border-top: 4px solid var(--header-bg); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: 15px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        @media (max-width: 450px) { .options-grid { grid-template-columns: 1fr; } .header h1 { font-size: 18px; } .test-note { font-size: 13px; } }
+        @media (max-width: 450px) { .options-grid { grid-template-columns: 1fr; } .header h1 { font-size: 18px; } }
     </style>
 </head>
 <body>
@@ -87,7 +104,7 @@
 
 <div class="quiz-container" id="quiz-box">
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-    <div id="q-counter" style="font-size:12px; color:#78909c; margin-bottom:12px;">السؤال 1 من 15</div>
+    <div id="q-counter" style="font-size:12px; color:#546e7a; margin-bottom:12px;">السؤال 1 من 5</div>
     <div class="question-text" id="question-text">جاري التحميل...</div>
     <div class="options-grid" id="options-grid"></div>
 </div>
@@ -97,55 +114,57 @@
     <p style="font-size: 16px;">لقد حصلت على درجة:</p>
     <div class="score-display" id="final-score">0</div>
     <p style="font-size: 14px; color: #546e7a;">استعد للتحدي القادم بكل حماس!</p>
-    
     <div id="retry-section" style="display:none;">
         <button class="retry-btn" onclick="location.reload()"><span>حاول مرة أخرى</span> 🔄</button>
-        <p style="font-size: 11px; color: #90a4ae; margin-top: 10px;">(لديك فرصة أخيرة لتحسين درجتك)</p>
     </div>
     <div id="status-area" style="margin-top:20px;"><div class="loading"></div></div>
 </div>
 
 <script>
-    // هام: تأكد من استخدام الرابط المحدث الذي قمت بنشره (Deploy)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyz0lCzVvtxZ_EooOcUuEl8tLDQ0az1-OJa4tE2vRskaaoxIFwDW2-pEN1fSrcdWOkY/exec';
+    // استخدم رابط السكريبت الموحد الذي قمت بنشره مؤخراً
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw6CKxpc877UM7wQmDIVLlOR_aNiHDE19z-RP0PBPMPCszB72Ilb6_ArWMhrbP_mU3i/exec';
 
+    // تم الإبقاء على الأسئلة 4 و 5 و 6 و 7 و 8 فقط
     const quizData = [
-        { q: "في العدد 6924، الرقم الذي يقع في منزلة 'المئات' هو:", a: ["4", "2", "9", "6"], c: 2 },
-        { q: "الصورة التحليلية (9 + 50 + 4000) تمثل العدد:", a: ["4509", "4059", "4590", "9540"], c: 1 },
-        { q: "أي الأعداد التالية هو عدد 'زوجي'؟", a: ["2431", "5683", "1208", "3337"], c: 2 },
         { q: "قارن بين العددين: 8540 (...) 8504", a: [">", "<", "=", "+"], c: 0 },
-        { q: "فطيرة مقسمة إلى 6 أجزاء متطابقة، أكلت هند 5 أجزاء منها. الكسر الدال على الأجزاء هو:", a: ["1/6", "5/6", "6/5", "1/5"], c: 1 },
+        { q: "فطيرة مقسمة إلى 6 أجزاء متطابقة، أكلت هند 5 أجزاء منها. الكسر الدال على الأجزاء المأكولة هو:", a: ["1/6", "5/6", "6/5", "1/5"], c: 1 },
         { q: "الكسر الذي يقرأ 'ثلاثة أرباع' يكتب:", a: ["4/3", "3/4", "1/3", "1/4"], c: 1 },
         { q: "أي الكسور التالية أصغر من 1/2؟", a: ["3/4", "2/3", "1/4", "5/5"], c: 2 },
-        { q: "الكسر المكافئ للكسر 2/3 هو:", a: ["4/6", "1/2", "3/2", "1/3"], c: 0 },
-        { q: "ناتج طرح: 700 - 250 = ...", a: ["550", "450", "500", "350"], c: 1 },
-        { q: "قدر ناتج طرح 89 - 41 بالتقريب إلى أقرب عشرة:", a: ["30", "40", "50", "60"], c: 2 },
-        { q: "مكتبة فيها 350 كتاباً، استعار الطلاب منها 100 كتاب. كم كتاباً بقي؟", a: ["450 كتاباً", "250 كتاباً", "200 كتاب", "300 كتاب"], c: 1 },
-        { q: "في غرفة الصف 3 صفوف من المقاعد، في كل صف 6 مقاعد. العملية المناسبة هي:", a: ["3 + 6", "6 - 3", "3 × 6", "6 ÷ 3"], c: 2 },
-        { q: "يريد معلم توزيع 20 قلماً بالتساوي على 5 طلاب. كم قلماً سيأخذ كل طالب؟", a: ["4 أقلام", "5 أقلام", "10 أقلام", "25 قلماً"], c: 0 },
-        { q: "ناتج قسمة 36 ÷ 6 = ...", a: ["5", "6", "7", "8"], c: 1 },
-        { q: "توفر نورة 5 ريالات يومياً. كم ريالاً توفر في 4 أيام؟", a: ["9 ريالات", "15 ريالاً", "20 ريالاً", "25 ريالاً"], c: 2 }
+        { q: "الكسر المكافئ للكسر 2/3 هو:", a: ["4/6", "1/2", "3/2", "1/3"], c: 0 }
     ];
 
     let currentIdx = 0, score = 0, qStats = [];
-    let attempts = parseInt(localStorage.getItem('nafis_training_2_attempts')) || 0;
+    let attempts = parseInt(localStorage.getItem('nafis_training_2_final_v2')) || 0;
 
     if(attempts >= 2) {
         document.body.innerHTML = "<div class='quiz-container' style='margin-top:50px;'><h3>بطل نافس!</h3><p>لقد أنجزت محاولتين في التدريب (2). نراك في التحدي القادم!</p></div>";
     }
 
+    // وظيفة لتحويل النص إلى كسر رأسي
+    function formatFraction(text) {
+        if (typeof text === 'string' && text.includes('/')) {
+            const parts = text.split('/');
+            return `<div class="fraction"><span class="numerator">${parts[0]}</span><span class="denominator">${parts[1]}</span></div>`;
+        }
+        return text;
+    }
+
     function loadQuestion() {
         const q = quizData[currentIdx];
-        document.getElementById("q-counter").innerText = `السؤال ${currentIdx + 1} من 15`;
-        document.getElementById("progress-fill").style.width = `${((currentIdx + 1) / 15) * 100}%`;
-        document.getElementById("question-text").innerText = q.q;
+        document.getElementById("q-counter").innerText = `السؤال ${currentIdx + 1} من 5`;
+        document.getElementById("progress-fill").style.width = `${((currentIdx + 1) / 5) * 100}%`;
+        
+        // عرض الكسور رأسياً في متن السؤال إذا وجدت
+        let formattedQuestion = q.q.split(' ').map(word => formatFraction(word)).join(' ');
+        document.getElementById("question-text").innerHTML = formattedQuestion;
+        
         const grid = document.getElementById("options-grid");
         grid.innerHTML = "";
         
         q.a.forEach((opt, i) => {
             const btn = document.createElement("button");
             btn.className = "option-btn";
-            btn.innerText = opt;
+            btn.innerHTML = formatFraction(opt); // عرض الكسور رأسياً في الخيارات
             btn.onclick = () => {
                 let isCorrect = (i === q.c) ? 1 : 0;
                 if(isCorrect) score++;
@@ -161,9 +180,9 @@
     function submitData() {
         document.getElementById('quiz-box').style.display = 'none';
         document.getElementById('results').style.display = 'block';
-        document.getElementById('final-score').innerText = score + " / 15";
+        document.getElementById('final-score').innerText = score + " / 5";
         attempts++;
-        localStorage.setItem('nafis_training_2_attempts', attempts);
+        localStorage.setItem('nafis_training_2_final_v2', attempts);
 
         if (attempts < 2) {
             document.getElementById('retry-section').style.display = 'block';
@@ -176,7 +195,7 @@
                 score: score, 
                 qStats: qStats, 
                 attempt: attempts,
-                testID: "2" // الربط المباشر بورقة العمل رقم 2
+                testID: "2" // توجيه النتيجة للورقة رقم 2
             })
         }).then(() => {
             document.getElementById('status-area').innerHTML = "<p style='color:#2e7d32; font-weight:bold; font-size:12px;'>✓ تم إرسال نتيجتك للمعلم بنجاح</p>";
